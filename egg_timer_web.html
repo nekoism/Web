@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Egg Timer</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Daydream', sans-serif;
+      background:#000;
+      overflow:hidden;
+    }
+    .page {
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity 0.5s ease;
+    }
+    .page.active {
+      opacity:1;
+      pointer-events:auto;
+    }
+    .btn {
+      position:absolute;
+      cursor:pointer;
+    }
+    .timer {
+      position:absolute;
+      color:#fff;
+      font-size:48px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- PAGES -->
+<div id="menu-awal" class="page active" style="background-image:url('menu awal.png')">
+  <div class="btn" style="left:35%;top:60%;width:30%;height:10%" onclick="go('menu-main')"></div>
+</div>
+
+<div id="menu-main" class="page" style="background-image:url('2.png')">
+  <div class="btn" style="left:20%;top:55%;width:60%;height:10%" onclick="go('story-1');playMusic()"></div>
+  <div class="btn" style="left:20%;top:70%;width:60%;height:10%" onclick="go('menu-telur')"></div>
+</div>
+
+<div id="menu-telur" class="page" style="background-image:url('menu telur.png')">
+  <div class="btn" style="left:10%;top:25%;width:35%;height:30%" onclick="go('telur1')"></div>
+  <div class="btn" style="left:55%;top:25%;width:35%;height:30%" onclick="go('telur2')"></div>
+  <div class="btn" style="left:10%;top:60%;width:35%;height:30%" onclick="go('telur3')"></div>
+  <div class="btn" style="left:55%;top:60%;width:35%;height:30%" onclick="go('telur4')"></div>
+  <div class="btn" style="left:5%;top:5%;width:20%;height:10%" onclick="go('menu-main')"></div>
+</div>
+
+<!-- TELUR PAGES -->
+<div id="telur1" class="page" style="background-image:url('telur 1.png')">
+  <div class="timer" id="t1" style="left:40%;top:45%">02:00</div>
+  <div class="btn" style="left:30%;top:60%;width:40%;height:10%" onclick="startTimer(120,'t1')"></div>
+  <div class="btn" style="left:5%;top:5%;width:20%;height:10%" onclick="backTelur()"></div>
+</div>
+
+<div id="telur2" class="page" style="background-image:url('telur 2.png')">
+  <div class="timer" id="t2" style="left:40%;top:45%">06:30</div>
+  <div class="btn" style="left:30%;top:60%;width:40%;height:10%" onclick="startTimer(390,'t2')"></div>
+  <div class="btn" style="left:5%;top:5%;width:20%;height:10%" onclick="backTelur()"></div>
+</div>
+
+<div id="telur3" class="page" style="background-image:url('telur 3.png')">
+  <div class="timer" id="t3" style="left:40%;top:45%">07:00</div>
+  <div class="btn" style="left:30%;top:60%;width:40%;height:10%" onclick="startTimer(420,'t3')"></div>
+  <div class="btn" style="left:5%;top:5%;width:20%;height:10%" onclick="backTelur()"></div>
+</div>
+
+<div id="telur4" class="page" style="background-image:url('telur 4.png')">
+  <div class="timer" id="t4" style="left:40%;top:45%">14:00</div>
+  <div class="btn" style="left:30%;top:60%;width:40%;height:10%" onclick="startTimer(840,'t4')"></div>
+  <div class="btn" style="left:5%;top:5%;width:20%;height:10%" onclick="backTelur()"></div>
+</div>
+
+<!-- STORY -->
+<div id="story-1" class="page" style="background-image:url('3.png')">
+  <div class="btn" style="left:35%;top:70%;width:30%;height:10%" onclick="go('story-2')"></div>
+</div>
+<div id="story-2" class="page" style="background-image:url('4.png')">
+  <div class="btn" style="left:35%;top:70%;width:30%;height:10%" onclick="go('story-3')"></div>
+</div>
+<div id="story-3" class="page" style="background-image:url('5.png')">
+  <div class="btn" style="left:35%;top:70%;width:30%;height:10%" onclick="stopMusic();go('menu-awal')"></div>
+</div>
+
+<audio id="bgm" src="music.mp3" loop></audio>
+<audio id="bell" src="bell.mp3"></audio>
+
+<script>
+let currentTimer;
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function startTimer(sec,id){
+  clearInterval(currentTimer);
+  let t=sec;
+  const el=document.getElementById(id);
+  currentTimer=setInterval(()=>{
+    let m=String(Math.floor(t/60)).padStart(2,'0');
+    let s=String(t%60).padStart(2,'0');
+    el.textContent=`${m}:${s}`;
+    if(t--<=0){clearInterval(currentTimer);document.getElementById('bell').play();}
+  },1000);
+}
+function backTelur(){clearInterval(currentTimer);document.getElementById('bell').pause();document.getElementById('bell').currentTime=0;go('menu-telur');}
+function playMusic(){document.getElementById('bgm').play();}
+function stopMusic(){document.getElementById('bgm').pause();document.getElementById('bgm').currentTime=0;}
+</script>
+</body>
+</html>
